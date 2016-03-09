@@ -1,0 +1,7 @@
+<resources>
+    <string name="schemeInfo">schemeInfo</string>
+    <string name="desc_sort">sortbyEndDate(desc)</string>
+    <string name="asc_sort">sortbyEndDate(asc)</string>
+    <string name="refresh">Refresh</string>
+    <string name="scheme">scheme</string>
+</resources>
