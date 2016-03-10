@@ -64,7 +64,7 @@ public class HomeActivity extends AppCompatActivity {
                 sortDescending();
                 break;
             case (R.id.refresh):
-                new FetchSchemeData().execute(this);
+                new FetchSchemeData(this).execute();
                 break;
         }
         return true;

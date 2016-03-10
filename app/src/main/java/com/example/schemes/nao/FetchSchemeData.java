@@ -1,6 +1,7 @@
 package com.example.schemes.nao;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
@@ -34,17 +35,36 @@ import java.util.Locale;
 /**
  * Created by LNJPC on 04-03-2016.
  */
-public class FetchSchemeData extends AsyncTask<Activity, Void, ArrayList<Scheme>> {
+public class FetchSchemeData extends AsyncTask<Void, Void, ArrayList<Scheme>> {
 
     private static final String link = "http://mobile-dev.letsreap.com/mobile-api/v1/3eba480b13642409957cdde42e315afbde4b312ba259717aa0bdc09944deee3c0799061800b7854a6252b41895a26a0128e24c0b8efd56c571cc6f8bf7c0f5d1/schemes?store-pincode=411045";
 
     private Activity mActivity ;
+    private static ProgressDialog progressDialog ;
+
+    public  FetchSchemeData ( Activity activity){
+        mActivity = activity;
+    }
+
+    public FetchSchemeData () {}
 
 
     @Override
-    protected ArrayList<Scheme> doInBackground(Activity... params) {
+    protected void onPreExecute() {
+        super.onPreExecute();
+         progressDialog = new ProgressDialog(mActivity);
+        progressDialog.setMessage("Fetching");
+        progressDialog.setTitle("Search Schemes");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
 
-        mActivity = params[0];
+    }
+
+    @Override
+    protected ArrayList<Scheme> doInBackground(Void... params) {
+
+
+
 
         try {
             URL url = new URL(link);
@@ -72,7 +92,7 @@ public class FetchSchemeData extends AsyncTask<Activity, Void, ArrayList<Scheme>
             }
 
             try {
-                    SchemeDAO schemeDAO = new SchemeDAO(params[0]);
+                    SchemeDAO schemeDAO = new SchemeDAO(mActivity);
                  return   schemeDAO.getAllSchemes();
 
             }catch (SQLiteException | ParseException e) {e.printStackTrace();}
@@ -128,6 +148,7 @@ public class FetchSchemeData extends AsyncTask<Activity, Void, ArrayList<Scheme>
         if(schemeArrayList !=null) {
             SchemeListFragment.SchemeAdapter schemeAdapter = new SchemeListFragment.SchemeAdapter(mActivity, R.layout.schemelist_item, schemeArrayList);
             ((ListView) mActivity.findViewById(R.id.list)).setAdapter(schemeAdapter);
+            progressDialog.dismiss();
             ((HomeActivity) mActivity).setSchemeArrayList(schemeArrayList);
             ((HomeActivity) mActivity).setSchemeAdapter(schemeAdapter);
 

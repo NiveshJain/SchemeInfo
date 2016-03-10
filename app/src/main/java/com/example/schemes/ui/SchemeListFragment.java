@@ -27,7 +27,7 @@ import java.util.ArrayList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        new FetchSchemeData().execute(getActivity());
+        new FetchSchemeData(getActivity()).execute();
         return  inflater.inflate(R.layout.schemelistfragment,container,false);
     }
 

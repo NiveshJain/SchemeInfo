@@ -48,7 +48,7 @@ public class SchemeDAO {
         {Log.d(getClass().toString(),"schemeObjectNull") ;
             return -1;
         }
-        //Code for avoid duplicate entries , but JsonObject's key "scheme" is parsing as null.
+        //Code for avoiding duplicate entries , but JsonObject's key "scheme" is parsing as null.
      /*  ArrayList<Scheme> schemeArrayList =  this.getAllSchemes();
         if(!schemeArrayList.isEmpty()) {
             for (int i = 0; i < schemeArrayList.size(); i++) {
