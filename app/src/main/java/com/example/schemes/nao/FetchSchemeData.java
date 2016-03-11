@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.sqlite.SQLiteException;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.schemes.DAO.SchemeDAO;
 import com.example.schemes.R;
@@ -39,25 +42,40 @@ public class FetchSchemeData extends AsyncTask<Void, Void, ArrayList<Scheme>> {
 
     private static final String link = "http://mobile-dev.letsreap.com/mobile-api/v1/3eba480b13642409957cdde42e315afbde4b312ba259717aa0bdc09944deee3c0799061800b7854a6252b41895a26a0128e24c0b8efd56c571cc6f8bf7c0f5d1/schemes?store-pincode=411045";
 
-    private Activity mActivity ;
+    private  Activity mActivity ;
     private static ProgressDialog progressDialog ;
 
     public  FetchSchemeData ( Activity activity){
         mActivity = activity;
     }
 
-    public FetchSchemeData () {}
 
+   public   int checkNetwork (){
+
+        ConnectivityManager cm = (ConnectivityManager) mActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) return 0 ;
+        else return 1 ;
+    }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-         progressDialog = new ProgressDialog(mActivity);
-        progressDialog.setMessage("Fetching");
-        progressDialog.setTitle("Search Schemes");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.show();
 
+        if (checkNetwork() == 0) {
+            progressDialog = new ProgressDialog(mActivity);
+            progressDialog.setMessage("Fetching");
+            progressDialog.setTitle("Search Schemes");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.show();
+        }
+        else
+        {
+            this.cancel(true);
+            Toast toast = Toast.makeText(mActivity,"Check Network Connection",Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
     @Override
